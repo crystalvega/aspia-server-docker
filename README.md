@@ -105,4 +105,5 @@ docker compose build
 GNU General Public License v3.0
 
 Автор Aspia — [Dmitry Chapyshev](https://github.com/dchapyshev)
-Docker-образы v3.x — внутренняя сборка SZMA-Inform
+
+Docker-образы v3.x — внутренняя сборка crystalvega
