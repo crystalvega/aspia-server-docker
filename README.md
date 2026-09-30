@@ -2,7 +2,7 @@
 
 Раздельные Docker-образы для **Aspia Router** и **Aspia Relay** с автоматической инициализацией и управлением конфигурацией через переменные окружения.
 
-Форк проекта [paprikkafox/aspia-server-docker] (https://github.com/paprikkafox/aspia-server-docker)
+Форк проекта [paprikkafox/aspia-server-docker](https://github.com/paprikkafox/aspia-server-docker)
 
 > ⚠️ Версия 3.x несовместима с образами `paprikkafox/aspia-server` (v2.7). Архитектура, порты и формат конфигурации изменились. См. [официальную документацию по миграции](https://aspia.org/docs/migration).
 
