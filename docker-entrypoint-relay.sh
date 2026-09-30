@@ -11,7 +11,6 @@ ROUTER_PORT="${RELAY_ROUTER_PORT:-8063}"
 IDLE_TIMEOUT="${RELAY_IDLE_TIMEOUT:-5}"
 MAX_COUNT="${RELAY_MAX_COUNT:-100}"
 
-# Ждём ключ от Router
 TIMEOUT=60
 ELAPSED=0
 while [ ! -f "$SHARED_KEY" ] && [ $ELAPSED -lt $TIMEOUT ]; do
@@ -68,7 +67,6 @@ else
     update_field "idle_timeout" "$IDLE_TIMEOUT"
     update_field "max_count" "$MAX_COUNT"
 
-    # port встречается дважды — обрабатываем по секциям
     CURRENT_PEER_PORT=$(awk '/^\[peer\]/,/^\[/{if(/^port=/) print}' "$CONFIG" | cut -d= -f2)
     CURRENT_ROUTER_PORT=$(awk '/^\[router\]/,/^\[/{if(/^port=/) print}' "$CONFIG" | cut -d= -f2)
 

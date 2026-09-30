@@ -4,7 +4,6 @@ set -e
 CONFIG="/etc/aspia/router.conf"
 SHARED_DIR="/shared-keys"
 
-# Переменные портов с дефолтами
 HOST_PORT="${ASPIA_HOST_PORT:-8061}"
 HOST_LEGACY_PORT="${ASPIA_HOST_LEGACY_PORT:-8060}"
 CLIENT_PORT="${ASPIA_CLIENT_PORT:-8062}"
@@ -29,7 +28,6 @@ else
     echo "[INIT] Configuration found."
 fi
 
-# Обновляем порты в конфиге (создаём секции если отсутствуют)
 update_port() {
     local section="$1"
     local key="$2"
@@ -52,7 +50,6 @@ update_port "client" "port" "$CLIENT_PORT"
 update_port "relay" "port" "$RELAY_PORT"
 update_port "stun" "port" "$STUN_PORT"
 
-# Экспорт ключей
 cp -f /etc/aspia/relay.pub "$SHARED_DIR/relay.pub"
 cp -f /etc/aspia/host.pub "$SHARED_DIR/host.pub"
 echo "[INIT] Public keys exported to shared volume."
