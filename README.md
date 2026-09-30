@@ -16,7 +16,7 @@
 ## Быстрый старт
 
 ```bash
-git clone <repo-url> && cd aspia-server-docker
+git clone https://github.com/crystalvega/aspia-server-docker.git && cd aspia-server-docker
 # Отредактируйте RELAY_PUBLIC_ADDRESS в docker-compose.yml
 docker compose up -d
 docker compose logs aspia-router   # ← ключи и credentials
