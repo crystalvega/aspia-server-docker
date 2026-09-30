@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1
+FROM debian:stable-slim
+
+ENV ASPIA_VERSION=3.0.20
+ENV ASPIA_REPO=https://github.com/dchapyshev/aspia/releases/download/v${ASPIA_VERSION}
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    curl -sSL "${ASPIA_REPO}/aspia-relay-${ASPIA_VERSION}-x86_64.deb" -o /tmp/relay.deb && \
+    apt-get install -y --no-install-recommends /tmp/relay.deb || apt-get install -f -y && \
+    rm -f /tmp/relay.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY docker-entrypoint-relay.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-relay.sh
+
+VOLUME ["/etc/aspia"]
+
+ENTRYPOINT ["docker-entrypoint-relay.sh"]
+CMD ["aspia_relay"]

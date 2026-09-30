@@ -1,14 +1,61 @@
 services:
-  aspia-server:
-    image: paprikkafox/aspia-server:latest
-    container_name: aspia-server
-    hostname: aspia-server
+  aspia-router:
+    image: crystalvega/aspia-router:3.0.20
+    container_name: aspia-router
+    hostname: aspia-router
     environment:
-      - EXTERNAL_IP=88.22.11.33
+      - ASPIA_LOG_TO_STDOUT=1
+      - ASPIA_LOG_LEVEL=2
+      - ASPIA_HOST_PORT=8061
+      - ASPIA_HOST_LEGACY_PORT=8060
+      - ASPIA_CLIENT_PORT=8062
+      - ASPIA_RELAY_PORT=8063
+      - ASPIA_STUN_PORT=8065
     volumes:
-      - ./data/database:/var/lib/aspia:rw
-      - ./data/config:/etc/aspia:rw
+      - ./data/router/config:/etc/aspia:rw
+      - ./data/router/database:/var/lib/aspia:rw
+      - ./data/shared-keys:/shared-keys:rw
     ports:
-      - 8070:8070
-      - 8060:8060
-    restart: always
+      - "${ASPIA_HOST_LEGACY_PORT:-8060}:${ASPIA_HOST_LEGACY_PORT:-8060}/tcp"
+      - "${ASPIA_HOST_PORT:-8061}:${ASPIA_HOST_PORT:-8061}/tcp"
+      - "${ASPIA_CLIENT_PORT:-8062}:${ASPIA_CLIENT_PORT:-8062}/tcp"
+      - "${ASPIA_RELAY_PORT:-8063}:${ASPIA_RELAY_PORT:-8063}/tcp"
+      - "${ASPIA_STUN_PORT:-8065}:${ASPIA_STUN_PORT:-8065}/udp"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  aspia-relay:
+    image: crystalvega/aspia-relay:3.0.20
+    container_name: aspia-relay
+    hostname: aspia-relay
+    environment:
+      - ASPIA_LOG_TO_STDOUT=1
+      - ASPIA_LOG_LEVEL=2
+      - RELAY_PUBLIC_ADDRESS=127.0.0.1
+      - ROUTER_ADDRESS=aspia-router
+      - RELAY_PEER_PORT=8070
+      - RELAY_ROUTER_PORT=8063
+      - RELAY_IDLE_TIMEOUT=5
+      - RELAY_MAX_COUNT=100
+    volumes:
+      - ./data/relay/config:/etc/aspia:rw
+      - ./data/shared-keys:/shared-keys:ro
+    ports:
+      - "${RELAY_PEER_PORT:-8070}:${RELAY_PEER_PORT:-8070}/tcp"
+    depends_on:
+      aspia-router:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

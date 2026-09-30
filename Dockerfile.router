@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1
+FROM debian:stable-slim
+
+ENV ASPIA_VERSION=3.0.20
+ENV ASPIA_REPO=https://github.com/dchapyshev/aspia/releases/download/v${ASPIA_VERSION}
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates && \
+    curl -sSL "${ASPIA_REPO}/aspia-router-${ASPIA_VERSION}-x86_64.deb" -o /tmp/router.deb && \
+    apt-get install -y --no-install-recommends /tmp/router.deb || apt-get install -f -y && \
+    rm -f /tmp/router.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY docker-entrypoint-router.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-router.sh
+
+VOLUME ["/etc/aspia", "/var/lib/aspia"]
+
+ENTRYPOINT ["docker-entrypoint-router.sh"]
+CMD ["aspia_router"]
