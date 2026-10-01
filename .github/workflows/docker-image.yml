@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  ASPIA_VERSION: "3.0.20"
+  ASPIA_VERSION: "3.0.21"
 
 jobs:
   build-router:
