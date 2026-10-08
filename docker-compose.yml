@@ -1,6 +1,6 @@
 services:
   aspia-router:
-    image: crystalvega/aspia-router:3.0.28
+    image: crystalvega/aspia-router:3.0.30
     container_name: aspia-router
     hostname: aspia-router
     environment:
@@ -31,7 +31,7 @@ services:
       options: { max-size: "10m", max-file: "3" }
 
   aspia-relay:
-    image: crystalvega/aspia-relay:3.0.28
+    image: crystalvega/aspia-relay:3.0.30
     container_name: aspia-relay
     hostname: aspia-relay
     environment:
